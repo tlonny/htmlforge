@@ -21,7 +21,7 @@ export class DocumentArtifactRenderer {
             const classNames: string[] = []
             for (const [pseudoSelector, styles] of groupedStyles.entries()) {
                 const joinedStyles = styles.map((s) => `${s.name}: ${s.value};`).join("")
-                const className = `cls-${digest(joinedStyles)}`
+                const className = `cls-${digest(joinedStyles, String(pseudoSelector))}`
                 const selector = pseudoSelector ? `.${className}${pseudoSelector}` : `.${className}`
                 if (!this.seenSelectors.has(selector)) {
                     this.seenSelectors.add(selector)

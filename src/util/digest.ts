@@ -1,8 +1,12 @@
 import { createHash } from "crypto"
 
-export const digest = (value : string) => {
-    return createHash("sha256")
-        .update(value)
+export const digest = (...values : string[]) => {
+    const hash = createHash("sha256")
+    for (const value of values) {
+        hash.update(value)
+    }
+
+    return hash
         .digest()
         .subarray(0, 8)
         .toString("hex")
