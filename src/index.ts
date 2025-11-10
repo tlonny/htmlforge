@@ -5,7 +5,6 @@ export type {
     ArtifactRaw,
     ArtifactText,
     INode,
-    INodeParent,
     Attribute,
     Style,
     CSSProperties,

@@ -1,4 +1,4 @@
-import type { INode, INodeParent, Artifact, Attribute, Style, CSSPseudoSelector, CSSProperties } from "@src/type"
+import type { INode, Artifact, Attribute, Style, CSSPseudoSelector, CSSProperties } from "@src/type"
 
 const VOID_ELEMENTS = new Set([
     "area", "base", "br", "col", "embed", "hr", "img", "input", "link",
@@ -8,7 +8,7 @@ const VOID_ELEMENTS = new Set([
 const kebabCaseConvert = (value: string) =>
     value.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)
 
-export class NodeElement implements INode, INodeParent {
+export class NodeElement implements INode {
 
     private readonly tagName : string
     private readonly attributes: Attribute[]

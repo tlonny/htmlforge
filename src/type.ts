@@ -45,7 +45,3 @@ export type Artifact =
 export interface INode {
     build(): Iterable<Artifact>
 }
-
-export interface INodeParent {
-    addChild(child : INode): this
-}

@@ -1,6 +1,6 @@
-import type { INode, INodeParent, Artifact } from "@src/type"
+import type { INode, Artifact } from "@src/type"
 
-export class NodeFragment implements INode, INodeParent {
+export class NodeFragment implements INode {
 
     readonly children: INode[]
 
