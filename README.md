@@ -45,9 +45,9 @@ npm install htmlforge
 ## HTML Document structure
 
 An `htmlforge` `Document` is a tree of nodes. Nodes come in a few flavors:
-- `NodeElement`: represent tags (e.g., `<div>`, `<head>`, `<body>`), can hold attributes and inline styles, and can nest any other node as a child.
-- `NodeText`: hold plain text content that will be HTML-escaped.
-- `NodeRaw`: hold raw HTML without escaping.
+- `NodeElement`: represents tags (e.g., `<div>`, `<span>`), can hold attributes and inline styles, and can nest any other node as a child.
+- `NodeText`: holds plain text content that will be HTML-escaped.
+- `NodeRaw`: holds raw HTML without escaping.
 - `NodeFragment`: groups a collection of child nodes without introducing a wrapping element.
 
 ## Creating an HTML document
@@ -61,12 +61,14 @@ const doc = new Document()
     .attributeAdd("lang", "en")
     .attributeAdd("data-theme", "dark")
 
-doc.body.childAdd(new NodeText("Hello world"))
+doc.body
+    .styleAdd("margin", "auto")
+    .childAdd(new NodeText("Hello world"))
 ```
 
-## Element nodes
+## `NodeElement` nodes
 
-`document.head` and `document.body` are `NodeElement` nodes. You can create your own with `new NodeElement("tagname")`. Element nodes support:
+`NodeElement` supports:
 - `attributeAdd(name, value)` for HTML attributes
 - `styleAdd(property, value, options?)` for inline styles (with optional `pseudoSelector`, `mediaQuery`)
 - `childAdd(node)` to nest children nodes
@@ -89,7 +91,7 @@ const card = new NodeElement("section")
     )
 ```
 
-## Fragment nodes
+## `NodeFragment` nodes
 
 `NodeFragment` groups child nodes without adding a wrapper element. It only supports `childAdd` (also chainable).
 

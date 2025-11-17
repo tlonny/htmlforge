@@ -14,6 +14,10 @@ export type Attribute = {
     value: string
 }
 
+export type ArtifactStyleSet = {
+    styles: Style[]
+}
+
 export type ArtifactTagOpen = {
     artifactType: "TAG_OPEN",
     tagName: string,
@@ -36,16 +40,11 @@ export type ArtifactRaw = {
     raw: string
 }
 
-export type ArtifactSIGNATURE = {
-    artifactType: "SIGNATURE"
-}
-
 export type Artifact =
     | ArtifactTagOpen
     | ArtifactTagClose
     | ArtifactText
     | ArtifactRaw
-    | ArtifactSIGNATURE
 
 export interface INode {
     build(): Iterable<Artifact>

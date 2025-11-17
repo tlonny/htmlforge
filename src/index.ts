@@ -12,6 +12,8 @@ export type {
 } from "@src/type"
 
 export { Document } from "@src/document"
+export { DocumentNodeBody } from "@src/document/body"
+export { DocumentNodeHead } from "@src/document/head"
 export { NodeElement } from "@src/node/element"
 export { NodeFragment } from "@src/node/fragment"
 export { NodeRaw } from "@src/node/raw"

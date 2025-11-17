@@ -1,19 +1,19 @@
-import { DocumentArtifactRenderer } from "@src/document/artifact/renderer"
-import { NodeSignature } from "@src/node/signature"
 import { NodeElement } from "@src/node/element"
+import { DocumentNodeBody } from "@src/document/body"
+import { DocumentNodeHead } from "@src/document/head"
+import { DocumentNodeSignature } from "@src/document/signature"
 
 export class Document {
 
     private readonly html : NodeElement
-    readonly head : NodeElement
-    readonly body : NodeElement
+    readonly head : DocumentNodeHead
+    readonly body : DocumentNodeBody
 
     constructor() {
-        this.head = new NodeElement("head")
-        this.body = new NodeElement("body")
-
+        this.head = new DocumentNodeHead()
+        this.body = new DocumentNodeBody(this.head.styleRef)
         this.html = new NodeElement("html")
-            .childAdd(new NodeSignature())
+            .childAdd(new DocumentNodeSignature())
             .childAdd(this.head)
             .childAdd(this.body)
     }
@@ -24,16 +24,6 @@ export class Document {
     }
 
     toString() {
-        const fragments : string[] = [
-            "<!DOCTYPE html>"
-        ]
-
-        const renderer = new DocumentArtifactRenderer()
-        for (const artifact of this.html.build()) {
-            fragments.push(renderer.render(artifact))
-        }
-
-        return fragments.join("")
     }
 
 }
