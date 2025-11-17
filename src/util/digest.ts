@@ -9,5 +9,5 @@ export const digest = (...values : string[]) => {
     return hash
         .digest()
         .subarray(0, 8)
-        .toString("hex")
+        .toString("base64url")
 }

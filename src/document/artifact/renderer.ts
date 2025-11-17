@@ -1,14 +1,19 @@
-import type { Artifact, ArtifactTagOpen } from "@src/type"
+import type { Artifact, ArtifactTagOpen, Style } from "@src/type"
 import { digest } from "@src/util/digest"
 import { groupBy } from "@src/util/group-by"
 import { HTMLEscape } from "@src/util/html-escape"
 
+const WRAPPER_QUERIES = [
+    "containerQuery",
+    "mediaQuery",
+] as const
+
 export class DocumentArtifactRenderer {
 
-    private readonly seenSelectors : Set<string>
+    private readonly digests : Set<string>
 
     constructor() {
-        this.seenSelectors = new Set()
+        this.digests = new Set()
     }
 
     private artifactTagOpenRender(artifact : ArtifactTagOpen) {
@@ -17,15 +22,36 @@ export class DocumentArtifactRenderer {
         const attributes = [...artifact.attributes]
 
         if (artifact.styles.length > 0) {
-            const groupedStyles = groupBy(artifact.styles, s => s.pseudoSelector)
+            const groupedStyles = groupBy(
+                artifact.styles,
+                s => JSON.stringify([s.mediaQuery, s.containerQuery, s.pseudoSelector])
+            )
             const classNames: string[] = []
-            for (const [pseudoSelector, styles] of groupedStyles.entries()) {
+            for (const styles of groupedStyles.values()) {
+                const style = styles[0] as Style
+
                 const joinedStyles = styles.map((s) => `${s.name}: ${s.value};`).join("")
-                const className = `cls-${digest(joinedStyles, String(pseudoSelector))}`
-                const selector = pseudoSelector ? `.${className}${pseudoSelector}` : `.${className}`
-                if (!this.seenSelectors.has(selector)) {
-                    this.seenSelectors.add(selector)
-                    renderFragments.push(`<style>${selector} {${joinedStyles}}</style>`)
+                const digestStr = digest(JSON.stringify([
+                    style.mediaQuery,
+                    style.containerQuery,
+                    style.pseudoSelector,
+                    joinedStyles,
+                ]))
+
+                const className = `f${digestStr}`
+                if (!this.digests.has(digestStr)) {
+                    this.digests.add(digestStr)
+                    const selector = style.pseudoSelector
+                        ? `.${className}${style.pseudoSelector}`
+                        : `.${className}`
+
+                    const wrappedStyle = WRAPPER_QUERIES.reduce(
+                        (acc, query) => style[query]
+                            ? `${style[query]} {${acc}}`
+                            : acc,
+                        `${selector} {${joinedStyles}}`
+                    )
+                    renderFragments.push(`<style>${wrappedStyle}</style>`)
                 }
                 classNames.push(className)
             }

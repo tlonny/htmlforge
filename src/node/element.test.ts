@@ -11,9 +11,10 @@ describe("NodeElement", () => {
             .addAttribute("id", "demo")
             .addAttribute("data-role", "content")
             .addStyle("display", "flex")
-            .addStyle("justifyContent", "center")
-            .addStyle("color", "red", ":hover")
-            .addStyle("backgroundColor", "#fafafa", ":focus")
+            .addStyle("justify-content", "center")
+            .addStyle("color", "red", { pseudoSelector: ":hover" })
+            .addStyle("background-color", "#fafafa", { pseudoSelector: ":focus" })
+            .addStyle("font-size", "12px", { mediaQuery: "@media (max-width: 600px)" })
 
         const artifacts = Array.from(node.build()) as Artifact[]
 
@@ -26,10 +27,11 @@ describe("NodeElement", () => {
                     { name: "data-role", value: "content" }
                 ],
                 styles: [
-                    { name: "display", value: "flex", pseudoSelector: null },
-                    { name: "justify-content", value: "center", pseudoSelector: null },
-                    { name: "color", value: "red", pseudoSelector: ":hover" },
-                    { name: "background-color", value: "#fafafa", pseudoSelector: ":focus" }
+                    { name: "display", value: "flex", pseudoSelector: null, mediaQuery: null, containerQuery: null },
+                    { name: "justify-content", value: "center", pseudoSelector: null, mediaQuery: null, containerQuery: null },
+                    { name: "color", value: "red", pseudoSelector: ":hover", mediaQuery: null, containerQuery: null },
+                    { name: "background-color", value: "#fafafa", pseudoSelector: ":focus", mediaQuery: null, containerQuery: null },
+                    { name: "font-size", value: "12px", pseudoSelector: null, mediaQuery: "@media (max-width: 600px)", containerQuery: null }
                 ]
             },
             {
@@ -42,13 +44,13 @@ describe("NodeElement", () => {
     test("renders nested div tree", () => {
         const parent = new NodeElement("div").addAttribute("id", "root")
             .addStyle("padding", "8px")
-            .addStyle("margin", "4px", ":first-child")
+            .addStyle("margin", "4px", { pseudoSelector: ":first-child" })
         const childOne = new NodeElement("div").addAttribute("data-child", "one")
             .addStyle("color", "green")
-            .addStyle("fontWeight", "500", ":hover")
+            .addStyle("font-weight", "500", { pseudoSelector: ":hover" })
         const childTwo = new NodeElement("div").addAttribute("data-child", "two")
-            .addStyle("backgroundColor", "#eee")
-            .addStyle("borderColor", "#ccc", ":focus")
+            .addStyle("background-color", "#eee")
+            .addStyle("border-color", "#ccc", { pseudoSelector: ":focus" })
 
         childOne.addChild(new NodeText("child-one"))
         childTwo
@@ -56,7 +58,7 @@ describe("NodeElement", () => {
             .addChild(
                 new NodeElement("div")
                     .addAttribute("data-child", "nested")
-                    .addStyle("fontWeight", "bold")
+                    .addStyle("font-weight", "bold")
                     .addChild(new NodeText("nested-child"))
             )
 
@@ -72,8 +74,8 @@ describe("NodeElement", () => {
                 tagName: "div",
                 attributes: [{ name: "id", value: "root" }],
                 styles: [
-                    { name: "padding", value: "8px", pseudoSelector: null },
-                    { name: "margin", value: "4px", pseudoSelector: ":first-child" }
+                    { name: "padding", value: "8px", pseudoSelector: null, mediaQuery: null, containerQuery: null },
+                    { name: "margin", value: "4px", pseudoSelector: ":first-child", mediaQuery: null, containerQuery: null }
                 ]
             },
             {
@@ -81,8 +83,8 @@ describe("NodeElement", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "one" }],
                 styles: [
-                    { name: "color", value: "green", pseudoSelector: null },
-                    { name: "font-weight", value: "500", pseudoSelector: ":hover" }
+                    { name: "color", value: "green", pseudoSelector: null, mediaQuery: null, containerQuery: null },
+                    { name: "font-weight", value: "500", pseudoSelector: ":hover", mediaQuery: null, containerQuery: null }
                 ]
             },
             {
@@ -98,8 +100,8 @@ describe("NodeElement", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "two" }],
                 styles: [
-                    { name: "background-color", value: "#eee", pseudoSelector: null },
-                    { name: "border-color", value: "#ccc", pseudoSelector: ":focus" }
+                    { name: "background-color", value: "#eee", pseudoSelector: null, mediaQuery: null, containerQuery: null },
+                    { name: "border-color", value: "#ccc", pseudoSelector: ":focus", mediaQuery: null, containerQuery: null }
                 ]
             },
             {
@@ -111,7 +113,7 @@ describe("NodeElement", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "nested" }],
                 styles: [
-                    { name: "font-weight", value: "bold", pseudoSelector: null }
+                    { name: "font-weight", value: "bold", pseudoSelector: null, mediaQuery: null, containerQuery: null }
                 ]
             },
             {
@@ -151,7 +153,7 @@ describe("NodeElement", () => {
                     { name: "alt", value: "Logo" }
                 ],
                 styles: [
-                    { name: "width", value: "128px", pseudoSelector: null }
+                    { name: "width", value: "128px", pseudoSelector: null, mediaQuery: null, containerQuery: null }
                 ]
             }
         ])

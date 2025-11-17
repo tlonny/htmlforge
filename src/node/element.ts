@@ -1,12 +1,9 @@
-import type { INode, Artifact, Attribute, Style, CSSPseudoSelector, CSSProperties } from "@src/type"
+import type { INode, Artifact, Attribute, MediaQuery, PseudoSelector, Style, ContainerQuery } from "@src/type"
 
 const VOID_ELEMENTS = new Set([
     "area", "base", "br", "col", "embed", "hr", "img", "input", "link",
     "meta", "param", "source", "track", "wbr"
 ])
-
-const kebabCaseConvert = (value: string) =>
-    value.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)
 
 export class NodeElement implements INode {
 
@@ -23,15 +20,21 @@ export class NodeElement implements INode {
         this.children = []
     }
 
-    addStyle<T extends keyof CSSProperties>(
-        name : T,
-        value: Exclude<CSSProperties[T], undefined>,
-        pseudoSelector?: CSSPseudoSelector
+    addStyle(
+        name: string,
+        value: string,
+        options?: {
+            mediaQuery?: MediaQuery,
+            containerQuery?: ContainerQuery,
+            pseudoSelector?: PseudoSelector,
+        }
     ) {
         this.styles.push({
-            name: kebabCaseConvert(name),
-            value: String(value),
-            pseudoSelector: pseudoSelector ?? null
+            name: name,
+            value: value,
+            pseudoSelector: options?.pseudoSelector ?? null,
+            containerQuery: options?.containerQuery ?? null,
+            mediaQuery: options?.mediaQuery ?? null
         })
         return this
     }

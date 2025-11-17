@@ -11,10 +11,10 @@ describe("NodeFragment", () => {
         const parent = new NodeFragment()
         const childOne = new NodeElement("div").addAttribute("data-child", "one")
             .addStyle("color", "green")
-            .addStyle("fontWeight", "500", ":hover")
+            .addStyle("font-weight", "500", { pseudoSelector: ":hover" })
         const childTwo = new NodeElement("div").addAttribute("data-child", "two")
-            .addStyle("backgroundColor", "#eee")
-            .addStyle("borderColor", "#ccc", ":focus")
+            .addStyle("background-color", "#eee")
+            .addStyle("border-color", "#ccc", { pseudoSelector: ":focus" })
 
         childOne.addChild(new NodeText("child-one"))
         childTwo
@@ -22,7 +22,7 @@ describe("NodeFragment", () => {
             .addChild(
                 new NodeElement("div")
                     .addAttribute("data-child", "nested")
-                    .addStyle("fontWeight", "bold")
+                    .addStyle("font-weight", "bold")
                     .addChild(new NodeText("nested-child"))
             )
 
@@ -38,8 +38,8 @@ describe("NodeFragment", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "one" }],
                 styles: [
-                    { name: "color", value: "green", pseudoSelector: null },
-                    { name: "font-weight", value: "500", pseudoSelector: ":hover" }
+                    { name: "color", value: "green", pseudoSelector: null, mediaQuery: null, containerQuery: null },
+                    { name: "font-weight", value: "500", pseudoSelector: ":hover", mediaQuery: null, containerQuery: null }
                 ]
             },
             {
@@ -55,8 +55,8 @@ describe("NodeFragment", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "two" }],
                 styles: [
-                    { name: "background-color", value: "#eee", pseudoSelector: null },
-                    { name: "border-color", value: "#ccc", pseudoSelector: ":focus" }
+                    { name: "background-color", value: "#eee", pseudoSelector: null, mediaQuery: null, containerQuery: null },
+                    { name: "border-color", value: "#ccc", pseudoSelector: ":focus", mediaQuery: null, containerQuery: null }
                 ]
             },
             {
@@ -68,7 +68,7 @@ describe("NodeFragment", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "nested" }],
                 styles: [
-                    { name: "font-weight", value: "bold", pseudoSelector: null }
+                    { name: "font-weight", value: "bold", pseudoSelector: null, mediaQuery: null, containerQuery: null }
                 ]
             },
             {
