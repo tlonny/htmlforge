@@ -2,6 +2,7 @@ import { NodeElement } from "@src/node/element"
 import { DocumentNodeBody } from "@src/document/body"
 import { DocumentNodeHead } from "@src/document/head"
 import { DocumentNodeSignature } from "@src/document/signature"
+import { DocumentArtifactRenderer } from "@src/document/artifact/renderer"
 
 export class Document {
 
@@ -24,6 +25,16 @@ export class Document {
     }
 
     toString() {
+        const fragments : string[] = [
+            "<!DOCTYPE html>"
+        ]
+
+        const renderer = new DocumentArtifactRenderer()
+        for (const artifact of this.html.build()) {
+            fragments.push(renderer.render(artifact))
+        }
+
+        return fragments.join("")
     }
 
 }
