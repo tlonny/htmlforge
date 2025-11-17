@@ -3,6 +3,8 @@ import { digest } from "@src/util/digest"
 import { groupBy } from "@src/util/group-by"
 import { HTMLEscape } from "@src/util/html-escape"
 
+const SIGNATURE_LINE = "Created by htmlforge (https://github.com/tlonny/htmlforge)"
+
 export class DocumentArtifactRenderer {
 
     private readonly digests : Set<string>
@@ -65,6 +67,8 @@ export class DocumentArtifactRenderer {
             return HTMLEscape(artifact.text)
         } else if (artifact.artifactType === "RAW") {
             return artifact.raw
+        } else if (artifact.artifactType === "SIGNATURE") {
+            return `<!-- ${SIGNATURE_LINE} -->`
         } else {
             artifact satisfies never
             throw new Error("Invariant: Invalid artifact type")

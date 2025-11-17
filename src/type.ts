@@ -36,11 +36,16 @@ export type ArtifactRaw = {
     raw: string
 }
 
+export type ArtifactSIGNATURE = {
+    artifactType: "SIGNATURE"
+}
+
 export type Artifact =
     | ArtifactTagOpen
     | ArtifactTagClose
     | ArtifactText
     | ArtifactRaw
+    | ArtifactSIGNATURE
 
 export interface INode {
     build(): Iterable<Artifact>

@@ -1,4 +1,5 @@
 import { DocumentArtifactRenderer } from "@src/document/artifact/renderer"
+import { NodeSignature } from "@src/node/signature"
 import { NodeElement } from "@src/node/element"
 
 export class Document {
@@ -12,6 +13,7 @@ export class Document {
         this.body = new NodeElement("body")
 
         this.html = new NodeElement("html")
+            .childAdd(new NodeSignature())
             .childAdd(this.head)
             .childAdd(this.body)
     }
