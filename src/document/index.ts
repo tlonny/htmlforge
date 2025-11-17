@@ -12,12 +12,12 @@ export class Document {
         this.body = new NodeElement("body")
 
         this.html = new NodeElement("html")
-            .addChild(this.head)
-            .addChild(this.body)
+            .childAdd(this.head)
+            .childAdd(this.body)
     }
 
-    addAttribute(name : string, value: string) {
-        this.html.addAttribute(name, value)
+    attributeAdd(name : string, value: string) {
+        this.html.attributeAdd(name, value)
         return this
     }
 

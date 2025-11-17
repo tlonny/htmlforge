@@ -8,13 +8,13 @@ describe("NodeElement", () => {
 
     test("renders div with attributes and CSS rules", () => {
         const node = new NodeElement("div")
-            .addAttribute("id", "demo")
-            .addAttribute("data-role", "content")
-            .addStyle("display", "flex")
-            .addStyle("justify-content", "center")
-            .addStyle("color", "red", { pseudoSelector: ":hover" })
-            .addStyle("background-color", "#fafafa", { pseudoSelector: ":focus" })
-            .addStyle("font-size", "12px", { mediaQuery: "@media (max-width: 600px)" })
+            .attributeAdd("id", "demo")
+            .attributeAdd("data-role", "content")
+            .styleAdd("display", "flex")
+            .styleAdd("justify-content", "center")
+            .styleAdd("color", "red", { pseudoSelector: ":hover" })
+            .styleAdd("background-color", "#fafafa", { pseudoSelector: ":focus" })
+            .styleAdd("font-size", "12px", { mediaQuery: "@media (max-width: 600px)" })
 
         const artifacts = Array.from(node.build()) as Artifact[]
 
@@ -27,11 +27,11 @@ describe("NodeElement", () => {
                     { name: "data-role", value: "content" }
                 ],
                 styles: [
-                    { name: "display", value: "flex", pseudoSelector: null, mediaQuery: null, containerQuery: null },
-                    { name: "justify-content", value: "center", pseudoSelector: null, mediaQuery: null, containerQuery: null },
-                    { name: "color", value: "red", pseudoSelector: ":hover", mediaQuery: null, containerQuery: null },
-                    { name: "background-color", value: "#fafafa", pseudoSelector: ":focus", mediaQuery: null, containerQuery: null },
-                    { name: "font-size", value: "12px", pseudoSelector: null, mediaQuery: "@media (max-width: 600px)", containerQuery: null }
+                    { name: "display", value: "flex", pseudoSelector: null, mediaQuery: null },
+                    { name: "justify-content", value: "center", pseudoSelector: null, mediaQuery: null },
+                    { name: "color", value: "red", pseudoSelector: ":hover", mediaQuery: null },
+                    { name: "background-color", value: "#fafafa", pseudoSelector: ":focus", mediaQuery: null },
+                    { name: "font-size", value: "12px", pseudoSelector: null, mediaQuery: "@media (max-width: 600px)" }
                 ]
             },
             {
@@ -42,29 +42,29 @@ describe("NodeElement", () => {
     })
 
     test("renders nested div tree", () => {
-        const parent = new NodeElement("div").addAttribute("id", "root")
-            .addStyle("padding", "8px")
-            .addStyle("margin", "4px", { pseudoSelector: ":first-child" })
-        const childOne = new NodeElement("div").addAttribute("data-child", "one")
-            .addStyle("color", "green")
-            .addStyle("font-weight", "500", { pseudoSelector: ":hover" })
-        const childTwo = new NodeElement("div").addAttribute("data-child", "two")
-            .addStyle("background-color", "#eee")
-            .addStyle("border-color", "#ccc", { pseudoSelector: ":focus" })
+        const parent = new NodeElement("div").attributeAdd("id", "root")
+            .styleAdd("padding", "8px")
+            .styleAdd("margin", "4px", { pseudoSelector: ":first-child" })
+        const childOne = new NodeElement("div").attributeAdd("data-child", "one")
+            .styleAdd("color", "green")
+            .styleAdd("font-weight", "500", { pseudoSelector: ":hover" })
+        const childTwo = new NodeElement("div").attributeAdd("data-child", "two")
+            .styleAdd("background-color", "#eee")
+            .styleAdd("border-color", "#ccc", { pseudoSelector: ":focus" })
 
-        childOne.addChild(new NodeText("child-one"))
+        childOne.childAdd(new NodeText("child-one"))
         childTwo
-            .addChild(new NodeText("child-two"))
-            .addChild(
+            .childAdd(new NodeText("child-two"))
+            .childAdd(
                 new NodeElement("div")
-                    .addAttribute("data-child", "nested")
-                    .addStyle("font-weight", "bold")
-                    .addChild(new NodeText("nested-child"))
+                    .attributeAdd("data-child", "nested")
+                    .styleAdd("font-weight", "bold")
+                    .childAdd(new NodeText("nested-child"))
             )
 
         parent
-            .addChild(childOne)
-            .addChild(childTwo)
+            .childAdd(childOne)
+            .childAdd(childTwo)
 
         const artifacts = Array.from(parent.build()) as Artifact[]
 
@@ -74,8 +74,8 @@ describe("NodeElement", () => {
                 tagName: "div",
                 attributes: [{ name: "id", value: "root" }],
                 styles: [
-                    { name: "padding", value: "8px", pseudoSelector: null, mediaQuery: null, containerQuery: null },
-                    { name: "margin", value: "4px", pseudoSelector: ":first-child", mediaQuery: null, containerQuery: null }
+                    { name: "padding", value: "8px", pseudoSelector: null, mediaQuery: null },
+                    { name: "margin", value: "4px", pseudoSelector: ":first-child", mediaQuery: null }
                 ]
             },
             {
@@ -83,8 +83,8 @@ describe("NodeElement", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "one" }],
                 styles: [
-                    { name: "color", value: "green", pseudoSelector: null, mediaQuery: null, containerQuery: null },
-                    { name: "font-weight", value: "500", pseudoSelector: ":hover", mediaQuery: null, containerQuery: null }
+                    { name: "color", value: "green", pseudoSelector: null, mediaQuery: null },
+                    { name: "font-weight", value: "500", pseudoSelector: ":hover", mediaQuery: null }
                 ]
             },
             {
@@ -100,8 +100,8 @@ describe("NodeElement", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "two" }],
                 styles: [
-                    { name: "background-color", value: "#eee", pseudoSelector: null, mediaQuery: null, containerQuery: null },
-                    { name: "border-color", value: "#ccc", pseudoSelector: ":focus", mediaQuery: null, containerQuery: null }
+                    { name: "background-color", value: "#eee", pseudoSelector: null, mediaQuery: null },
+                    { name: "border-color", value: "#ccc", pseudoSelector: ":focus", mediaQuery: null }
                 ]
             },
             {
@@ -113,7 +113,7 @@ describe("NodeElement", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "nested" }],
                 styles: [
-                    { name: "font-weight", value: "bold", pseudoSelector: null, mediaQuery: null, containerQuery: null }
+                    { name: "font-weight", value: "bold", pseudoSelector: null, mediaQuery: null }
                 ]
             },
             {
@@ -137,10 +137,10 @@ describe("NodeElement", () => {
 
     test("renders void elements once and ignores children", () => {
         const img = new NodeElement("img")
-            .addAttribute("src", "/logo.png")
-            .addAttribute("alt", "Logo")
-            .addStyle("width", "128px")
-            .addChild(new NodeText("should-not-render"))
+            .attributeAdd("src", "/logo.png")
+            .attributeAdd("alt", "Logo")
+            .styleAdd("width", "128px")
+            .childAdd(new NodeText("should-not-render"))
 
         const artifacts = Array.from(img.build()) as Artifact[]
 
@@ -153,7 +153,7 @@ describe("NodeElement", () => {
                     { name: "alt", value: "Logo" }
                 ],
                 styles: [
-                    { name: "width", value: "128px", pseudoSelector: null, mediaQuery: null, containerQuery: null }
+                    { name: "width", value: "128px", pseudoSelector: null, mediaQuery: null }
                 ]
             }
         ])

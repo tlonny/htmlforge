@@ -8,7 +8,7 @@ export class NodeFragment implements INode {
         this.children = []
     }
 
-    addChild(node : INode) {
+    childAdd(node : INode) {
         this.children.push(node)
         return this
     }

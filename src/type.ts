@@ -1,14 +1,12 @@
 export type PseudoSelector = `:${string}`
 
 export type MediaQuery = `@media${string}`
-export type ContainerQuery = `@container${string}`
 
 export type Style = {
     name: string,
     value: string,
     pseudoSelector: PseudoSelector | null,
     mediaQuery: MediaQuery | null
-    containerQuery: ContainerQuery | null
 }
 
 export type Attribute = {

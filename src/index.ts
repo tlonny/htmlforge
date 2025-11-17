@@ -9,7 +9,6 @@ export type {
     Style,
     PseudoSelector,
     MediaQuery,
-    ContainerQuery
 } from "@src/type"
 
 export { Document } from "@src/document"

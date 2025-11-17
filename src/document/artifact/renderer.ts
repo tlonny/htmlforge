@@ -3,11 +3,6 @@ import { digest } from "@src/util/digest"
 import { groupBy } from "@src/util/group-by"
 import { HTMLEscape } from "@src/util/html-escape"
 
-const WRAPPER_QUERIES = [
-    "containerQuery",
-    "mediaQuery",
-] as const
-
 export class DocumentArtifactRenderer {
 
     private readonly digests : Set<string>
@@ -24,7 +19,7 @@ export class DocumentArtifactRenderer {
         if (artifact.styles.length > 0) {
             const groupedStyles = groupBy(
                 artifact.styles,
-                s => JSON.stringify([s.mediaQuery, s.containerQuery, s.pseudoSelector])
+                s => JSON.stringify([s.mediaQuery, s.pseudoSelector])
             )
             const classNames: string[] = []
             for (const styles of groupedStyles.values()) {
@@ -33,7 +28,6 @@ export class DocumentArtifactRenderer {
                 const joinedStyles = styles.map((s) => `${s.name}: ${s.value};`).join("")
                 const digestStr = digest(JSON.stringify([
                     style.mediaQuery,
-                    style.containerQuery,
                     style.pseudoSelector,
                     joinedStyles,
                 ]))
@@ -45,12 +39,9 @@ export class DocumentArtifactRenderer {
                         ? `.${className}${style.pseudoSelector}`
                         : `.${className}`
 
-                    const wrappedStyle = WRAPPER_QUERIES.reduce(
-                        (acc, query) => style[query]
-                            ? `${style[query]} {${acc}}`
-                            : acc,
-                        `${selector} {${joinedStyles}}`
-                    )
+                    const wrappedStyle = style.mediaQuery
+                        ? `${style.mediaQuery} {${selector} {${joinedStyles}}}`
+                        : `${selector} {${joinedStyles}}`
                     renderFragments.push(`<style>${wrappedStyle}</style>`)
                 }
                 classNames.push(className)

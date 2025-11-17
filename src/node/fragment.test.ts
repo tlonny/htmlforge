@@ -9,26 +9,26 @@ describe("NodeFragment", () => {
 
     test("renders nested div tree", () => {
         const parent = new NodeFragment()
-        const childOne = new NodeElement("div").addAttribute("data-child", "one")
-            .addStyle("color", "green")
-            .addStyle("font-weight", "500", { pseudoSelector: ":hover" })
-        const childTwo = new NodeElement("div").addAttribute("data-child", "two")
-            .addStyle("background-color", "#eee")
-            .addStyle("border-color", "#ccc", { pseudoSelector: ":focus" })
+        const childOne = new NodeElement("div").attributeAdd("data-child", "one")
+            .styleAdd("color", "green")
+            .styleAdd("font-weight", "500", { pseudoSelector: ":hover" })
+        const childTwo = new NodeElement("div").attributeAdd("data-child", "two")
+            .styleAdd("background-color", "#eee")
+            .styleAdd("border-color", "#ccc", { pseudoSelector: ":focus" })
 
-        childOne.addChild(new NodeText("child-one"))
+        childOne.childAdd(new NodeText("child-one"))
         childTwo
-            .addChild(new NodeText("child-two"))
-            .addChild(
+            .childAdd(new NodeText("child-two"))
+            .childAdd(
                 new NodeElement("div")
-                    .addAttribute("data-child", "nested")
-                    .addStyle("font-weight", "bold")
-                    .addChild(new NodeText("nested-child"))
+                    .attributeAdd("data-child", "nested")
+                    .styleAdd("font-weight", "bold")
+                    .childAdd(new NodeText("nested-child"))
             )
 
         parent
-            .addChild(childOne)
-            .addChild(childTwo)
+            .childAdd(childOne)
+            .childAdd(childTwo)
 
         const artifacts = Array.from(parent.build()) as Artifact[]
 
@@ -38,8 +38,8 @@ describe("NodeFragment", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "one" }],
                 styles: [
-                    { name: "color", value: "green", pseudoSelector: null, mediaQuery: null, containerQuery: null },
-                    { name: "font-weight", value: "500", pseudoSelector: ":hover", mediaQuery: null, containerQuery: null }
+                    { name: "color", value: "green", pseudoSelector: null, mediaQuery: null },
+                    { name: "font-weight", value: "500", pseudoSelector: ":hover", mediaQuery: null }
                 ]
             },
             {
@@ -55,8 +55,8 @@ describe("NodeFragment", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "two" }],
                 styles: [
-                    { name: "background-color", value: "#eee", pseudoSelector: null, mediaQuery: null, containerQuery: null },
-                    { name: "border-color", value: "#ccc", pseudoSelector: ":focus", mediaQuery: null, containerQuery: null }
+                    { name: "background-color", value: "#eee", pseudoSelector: null, mediaQuery: null },
+                    { name: "border-color", value: "#ccc", pseudoSelector: ":focus", mediaQuery: null }
                 ]
             },
             {
@@ -68,7 +68,7 @@ describe("NodeFragment", () => {
                 tagName: "div",
                 attributes: [{ name: "data-child", value: "nested" }],
                 styles: [
-                    { name: "font-weight", value: "bold", pseudoSelector: null, mediaQuery: null, containerQuery: null }
+                    { name: "font-weight", value: "bold", pseudoSelector: null, mediaQuery: null }
                 ]
             },
             {

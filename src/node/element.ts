@@ -1,4 +1,4 @@
-import type { INode, Artifact, Attribute, MediaQuery, PseudoSelector, Style, ContainerQuery } from "@src/type"
+import type { INode, Artifact, Attribute, MediaQuery, PseudoSelector, Style } from "@src/type"
 
 const VOID_ELEMENTS = new Set([
     "area", "base", "br", "col", "embed", "hr", "img", "input", "link",
@@ -20,12 +20,11 @@ export class NodeElement implements INode {
         this.children = []
     }
 
-    addStyle(
+    styleAdd(
         name: string,
         value: string,
         options?: {
             mediaQuery?: MediaQuery,
-            containerQuery?: ContainerQuery,
             pseudoSelector?: PseudoSelector,
         }
     ) {
@@ -33,18 +32,17 @@ export class NodeElement implements INode {
             name: name,
             value: value,
             pseudoSelector: options?.pseudoSelector ?? null,
-            containerQuery: options?.containerQuery ?? null,
             mediaQuery: options?.mediaQuery ?? null
         })
         return this
     }
 
-    addAttribute(name : string, value: string) {
+    attributeAdd(name : string, value: string) {
         this.attributes.push({ name, value })
         return this
     }
 
-    addChild(node : INode) {
+    childAdd(node : INode) {
         this.children.push(node)
         return this
     }
