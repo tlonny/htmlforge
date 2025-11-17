@@ -1,3 +1,7 @@
+export interface INode {
+    build(): Iterable<BuildArtifact>
+}
+
 export type PseudoSelector = `:${string}`
 
 export type MediaQuery = `@media${string}`
@@ -14,38 +18,42 @@ export type Attribute = {
     value: string
 }
 
-export type ArtifactStyleSet = {
-    styles: Style[]
-}
-
-export type ArtifactTagOpen = {
-    artifactType: "TAG_OPEN",
+export type BuildArtifactTagOpen = {
+    buildArtifactType: "TAG_OPEN",
     tagName: string,
+    isVoid: boolean
     attributes: Attribute[]
-    styles: Style[]
 }
 
-export type ArtifactTagClose = {
-    artifactType: "TAG_CLOSE",
+export type BuildArtifactTagClose = {
+    buildArtifactType: "TAG_CLOSE",
     tagName: string
 }
 
-export type ArtifactText = {
-    artifactType: "TEXT"
+export type BuildArtifactText = {
+    buildArtifactType: "TEXT"
     text: string
 }
 
-export type ArtifactRaw = {
-    artifactType: "RAW"
+export type BuildArtifactRaw = {
+    buildArtifactType: "RAW"
     raw: string
 }
 
-export type Artifact =
-    | ArtifactTagOpen
-    | ArtifactTagClose
-    | ArtifactText
-    | ArtifactRaw
+export type BuildArtifactStyledClass = {
+    buildArtifactType: "STYLED_CLASS",
+    styles: Style[]
+    className: string
+}
 
-export interface INode {
-    build(): Iterable<Artifact>
+export type BuildArtifact =
+    | BuildArtifactTagOpen
+    | BuildArtifactTagClose
+    | BuildArtifactText
+    | BuildArtifactRaw
+    | BuildArtifactStyledClass
+
+export type RenderFragment = {
+    fragment: string
+    indentAction: "OPEN" | "CLOSE" | "NONE"
 }

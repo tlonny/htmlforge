@@ -1,4 +1,5 @@
-import type { INode, Artifact, Attribute, MediaQuery, PseudoSelector, Style } from "@src/type"
+import { createHash } from "crypto"
+import type { INode, BuildArtifact, Attribute, MediaQuery, PseudoSelector, Style } from "@src/type"
 
 const VOID_ELEMENTS = new Set([
     "area", "base", "br", "col", "embed", "hr", "img", "input", "link",
@@ -28,12 +29,9 @@ export class NodeElement implements INode {
             pseudoSelector?: PseudoSelector,
         }
     ) {
-        this.styles.push({
-            name: name,
-            value: value,
-            pseudoSelector: options?.pseudoSelector ?? null,
-            mediaQuery: options?.mediaQuery ?? null
-        })
+        const pseudoSelector = options?.pseudoSelector ?? null
+        const mediaQuery = options?.mediaQuery ?? null
+        this.styles.push({ name, value, pseudoSelector, mediaQuery })
         return this
     }
 
@@ -47,15 +45,38 @@ export class NodeElement implements INode {
         return this
     }
 
-    *build(): Iterable<Artifact> {
-        yield {
-            artifactType: "TAG_OPEN",
-            tagName: this.tagName,
-            attributes: this.attributes,
-            styles: this.styles
+    *build(): Iterable<BuildArtifact> {
+        const attributes = [...this.attributes]
+        const isVoid = VOID_ELEMENTS.has(this.tagName)
+
+        if (this.styles.length > 0) {
+            const hash = createHash("sha256")
+            for (const style of this.styles) {
+                hash.update(JSON.stringify(style))
+            }
+            const digest = hash.digest()
+                .subarray(0, 8)
+                .toString("base64url")
+
+            const className = `f${digest}`
+            attributes.push({ name: "class", value: className })
+
+            yield {
+                buildArtifactType: "STYLED_CLASS",
+                styles: [...this.styles],
+                className: className
+            }
         }
 
-        if (VOID_ELEMENTS.has(this.tagName)) {
+
+        yield {
+            buildArtifactType: "TAG_OPEN",
+            tagName: this.tagName,
+            isVoid: isVoid,
+            attributes: attributes,
+        }
+
+        if (isVoid) {
             return
         }
 
@@ -64,7 +85,7 @@ export class NodeElement implements INode {
         }
 
         yield {
-            artifactType: "TAG_CLOSE",
+            buildArtifactType: "TAG_CLOSE",
             tagName: this.tagName
         }
     }

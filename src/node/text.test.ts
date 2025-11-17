@@ -1,16 +1,16 @@
 import { describe, expect, test } from "bun:test"
 
 import { NodeText } from "@src/node/text"
-import type { ArtifactText } from "@src/type"
+import type { BuildArtifactText } from "@src/type"
 
 describe("NodeText", () => {
 
     test("emits a text fragment", () => {
         const node = new NodeText("text")
-        const artifacts = Array.from(node.build()) as ArtifactText[]
+        const buildArtifacts = Array.from(node.build()) as BuildArtifactText[]
 
-        expect(artifacts).toEqual([{
-            artifactType: "TEXT",
+        expect(buildArtifacts).toEqual([{
+            buildArtifactType: "TEXT",
             text: "text"
         }])
     })

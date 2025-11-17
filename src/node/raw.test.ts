@@ -1,14 +1,14 @@
 import { NodeRaw } from "@src/node/raw"
-import type { ArtifactRaw } from "@src/type"
+import type { BuildArtifactRaw } from "@src/type"
 import { describe, expect, test } from "bun:test"
 
 describe("NodeRaw", () => {
-    test("emits a RAW artifact", () => {
+    test("emits a RAW buildArtifact", () => {
         const node = new NodeRaw("raw")
-        const artifacts = Array.from(node.build()) as ArtifactRaw[]
+        const buildArtifacts = Array.from(node.build()) as BuildArtifactRaw[]
 
-        expect(artifacts).toEqual([{
-            artifactType: "RAW",
+        expect(buildArtifacts).toEqual([{
+            buildArtifactType: "RAW",
             raw: "raw"
         }])
     })

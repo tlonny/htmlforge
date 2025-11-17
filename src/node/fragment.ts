@@ -1,4 +1,4 @@
-import type { INode, Artifact } from "@src/type"
+import type { INode, BuildArtifact } from "@src/type"
 
 export class NodeFragment implements INode {
 
@@ -13,7 +13,7 @@ export class NodeFragment implements INode {
         return this
     }
 
-    *build(): Iterable<Artifact> {
+    *build(): Iterable<BuildArtifact> {
         for (const child of this.children) {
             yield* child.build()
         }

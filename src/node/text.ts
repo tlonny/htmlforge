@@ -1,4 +1,4 @@
-import type { INode, Artifact } from "@src/type"
+import type { INode, BuildArtifact } from "@src/type"
 
 export class NodeText implements INode {
 
@@ -8,9 +8,9 @@ export class NodeText implements INode {
         this.text = text
     }
 
-    *build() : Iterable<Artifact> {
+    *build() : Iterable<BuildArtifact> {
         yield {
-            artifactType: "TEXT",
+            buildArtifactType: "TEXT",
             text: this.text
         }
     }

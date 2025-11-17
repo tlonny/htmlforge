@@ -1,9 +1,10 @@
 export type {
-    Artifact,
-    ArtifactTagOpen,
-    ArtifactTagClose,
-    ArtifactRaw,
-    ArtifactText,
+    BuildArtifact,
+    BuildArtifactTagOpen,
+    BuildArtifactTagClose,
+    BuildArtifactRaw,
+    BuildArtifactText,
+    BuildArtifactStyledClass,
     INode,
     Attribute,
     Style,
@@ -11,9 +12,7 @@ export type {
     MediaQuery,
 } from "@src/type"
 
-export { Document } from "@src/document"
-export { DocumentNodeBody } from "@src/document/body"
-export { DocumentNodeHead } from "@src/document/head"
+export { HTML } from "@src/html"
 export { NodeElement } from "@src/node/element"
 export { NodeFragment } from "@src/node/fragment"
 export { NodeRaw } from "@src/node/raw"
