@@ -1,6 +1,6 @@
 {
   "name": "htmlforge",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.5.0",
     "@types/bun": "latest",
@@ -8,6 +8,9 @@
     "@typescript-eslint/parser": "^8.46.3",
     "bun-plugin-dts": "^0.3.0",
     "eslint": "^9.39.1"
+  },
+  "repository": {
+    "url": "https://github.com/tlonny/htmlforge"
   },
   "peerDependencies": {
     "typescript": "^5"
