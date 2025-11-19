@@ -2,7 +2,7 @@ import type { INode, BuildArtifact } from "@src/type"
 
 export class NodeFragment implements INode {
 
-    readonly children: INode[]
+    private readonly children: INode[]
 
     constructor() {
         this.children = []

@@ -76,21 +76,8 @@ export class HTML {
 
         buildArtifactBuffer.splice(spliceIndex, 0, ...styledClassBuildArtifacts)
 
-
-        let indentCount = 0
         for (const buildArtifact of buildArtifactBuffer) {
-            for (const { fragment, indentAction } of HTMLBuildArtifactRender(buildArtifact)) {
-                if (indentAction === "CLOSE") {
-                    indentCount -= 1
-                }
-
-                const indentStr = this.indent.repeat(indentCount)
-                fragments.push(`${indentStr}${fragment}`)
-
-                if (indentAction === "OPEN") {
-                    indentCount += 1
-                }
-            }
+            fragments.push(HTMLBuildArtifactRender(buildArtifact))
         }
 
         return fragments.join("\n")

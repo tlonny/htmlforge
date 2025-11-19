@@ -1,82 +1,61 @@
-import type { BuildArtifact, BuildArtifactRaw, BuildArtifactStyledClass, BuildArtifactTagClose, BuildArtifactTagOpen, BuildArtifactText, RenderFragment, Style } from "@src/type"
+import type { BuildArtifact, BuildArtifactRaw, BuildArtifactStyledClass, BuildArtifactTagClose, BuildArtifactTagOpen, BuildArtifactText, Style } from "@src/type"
 import { groupBy } from "@src/util/group-by"
 import { HTMLEscape } from "@src/util/html-escape"
 
-const HTMLBuildArtifactStyledClassRender = (buildArtifact: BuildArtifactStyledClass): RenderFragment[] => {
+const HTMLBuildArtifactStyledClassRender = (buildArtifact: BuildArtifactStyledClass): string => {
     const groupedStyles = groupBy(
         buildArtifact.styles,
         s => JSON.stringify([s.mediaQuery, s.pseudoSelector])
     )
 
-    const fragments: RenderFragment[] = []
+    const fragments: string[] = []
     for (const styles of groupedStyles.values()) {
         const { mediaQuery, pseudoSelector } = styles[0] as Style
         if (mediaQuery) {
-            fragments.push({
-                fragment: `${mediaQuery} {`,
-                indentAction: "OPEN"
-            })
+            fragments.push(`${mediaQuery} {`)
         }
 
         const selector = pseudoSelector
             ? `.${buildArtifact.className}${pseudoSelector}`
             : `.${buildArtifact.className}`
 
-        fragments.push({
-            fragment: `${selector} {`,
-            indentAction: "OPEN"
-        })
+        fragments.push(`${selector} {`)
 
         for (const style of styles) {
-            fragments.push({
-                fragment: `${style.name}: ${style.value};`,
-                indentAction: "NONE"
-            })
+            fragments.push(`${style.name}: ${style.value};`)
         }
 
-        fragments.push({
-            fragment: "}",
-            indentAction: "CLOSE"
-        })
+        fragments.push("}")
 
         if (mediaQuery) {
-            fragments.push({
-                fragment: "}",
-                indentAction: "CLOSE"
-            })
+            fragments.push("}")
         }
     }
 
-    return fragments
+    return fragments.join("")
 }
 
-const HTMLBuildArtifactTagOpenRender = (buildArtifact: BuildArtifactTagOpen): RenderFragment[] => {
+const HTMLBuildArtifactTagOpenRender = (buildArtifact: BuildArtifactTagOpen): string => {
     const attrString = buildArtifact.attributes
         .map(({name, value}) => ` ${name}="${HTMLEscape(value)}"`)
         .join("")
 
-    return [{
-        fragment: `<${buildArtifact.tagName}${attrString}>`,
-        indentAction: buildArtifact.isVoid ? "NONE" : "OPEN"
-    }]
+    return `<${buildArtifact.tagName}${attrString}>`
 }
 
-const HTMLBuildArtifactTagCloseRender = (buildArtifact: BuildArtifactTagClose): RenderFragment[] => [{
-    fragment: `</${buildArtifact.tagName}>`,
-    indentAction: "CLOSE"
-}]
+const HTMLBuildArtifactTagCloseRender = (buildArtifact: BuildArtifactTagClose): string => {
+    return `</${buildArtifact.tagName}>`
+}
 
-const HTMLBuildArtifactTextRender = (buildArtifact: BuildArtifactText): RenderFragment[] => [{
-    fragment: HTMLEscape(buildArtifact.text),
-    indentAction: "NONE"
-}]
+const HTMLBuildArtifactTextRender = (buildArtifact: BuildArtifactText): string => {
+    return HTMLEscape(buildArtifact.text)
+}
 
-const HTMLBuildArtifactRawRender = (buildArtifact: BuildArtifactRaw): RenderFragment[] => [{
-    fragment: buildArtifact.raw,
-    indentAction: "NONE"
-}]
+const HTMLBuildArtifactRawRender = (buildArtifact: BuildArtifactRaw): string => {
+    return buildArtifact.raw
+}
 
-export const HTMLBuildArtifactRender = (buildArtifact: BuildArtifact): RenderFragment[] => {
+export const HTMLBuildArtifactRender = (buildArtifact: BuildArtifact): string => {
     if (buildArtifact.buildArtifactType === "TAG_OPEN") {
         return HTMLBuildArtifactTagOpenRender(buildArtifact)
     } else if (buildArtifact.buildArtifactType === "TAG_CLOSE") {

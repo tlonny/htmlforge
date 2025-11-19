@@ -52,8 +52,3 @@ export type BuildArtifact =
     | BuildArtifactText
     | BuildArtifactRaw
     | BuildArtifactStyledClass
-
-export type RenderFragment = {
-    fragment: string
-    indentAction: "OPEN" | "CLOSE" | "NONE"
-}

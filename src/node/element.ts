@@ -11,8 +11,7 @@ export class NodeElement implements INode {
     private readonly tagName : string
     private readonly attributes: Attribute[]
     private readonly styles: Style[]
-
-    readonly children: INode[]
+    private readonly children: INode[]
 
     constructor(tagName: string) {
         this.tagName = tagName.toLowerCase()

@@ -19,9 +19,7 @@ describe("HTMLBuildArtifactRender", () => {
             text
         }
 
-        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual([
-            { fragment: HTMLEscape(text), indentAction: "NONE" }
-        ])
+        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual(HTMLEscape(text))
     })
 
     test("renders RAW buildArtifacts without escaping", () => {
@@ -31,9 +29,7 @@ describe("HTMLBuildArtifactRender", () => {
             raw
         }
 
-        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual([
-            { fragment: raw, indentAction: "NONE" }
-        ])
+        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual(raw)
     })
 
     test("renders TAG_CLOSE buildArtifacts", () => {
@@ -42,9 +38,7 @@ describe("HTMLBuildArtifactRender", () => {
             tagName: "section"
         }
 
-        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual([
-            { fragment: "</section>", indentAction: "CLOSE" }
-        ])
+        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual("</section>")
     })
 
     test("renders TAG_OPEN buildArtifacts with escaped attributes", () => {
@@ -59,9 +53,9 @@ describe("HTMLBuildArtifactRender", () => {
             ]
         }
 
-        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual([
-            { fragment: `<div id="root" title="${HTMLEscape(title)}">`, indentAction: "OPEN" }
-        ])
+        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual(
+            `<div id="root" title="${HTMLEscape(title)}">`
+        )
     })
 
     test("renders void TAG_OPEN buildArtifacts without further indentation", () => {
@@ -75,9 +69,7 @@ describe("HTMLBuildArtifactRender", () => {
             ]
         }
 
-        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual([
-            { fragment: "<img src=\"/logo.png\" alt=\"Logo\">", indentAction: "NONE" }
-        ])
+        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual("<img src=\"/logo.png\" alt=\"Logo\">")
     })
 
     test("renders basic STYLED_CLASS buildArtifacts", () => {
@@ -90,12 +82,9 @@ describe("HTMLBuildArtifactRender", () => {
             ]
         }
 
-        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual([
-            { fragment: ".fabc123 {", indentAction: "OPEN" },
-            { fragment: "color: red;", indentAction: "NONE" },
-            { fragment: "background-color: #fff;", indentAction: "NONE" },
-            { fragment: "}", indentAction: "CLOSE" }
-        ])
+        expect(HTMLBuildArtifactRender(buildArtifact)).toEqual(
+            ".fabc123 {color: red;background-color: #fff;}"
+        )
     })
 
     test("renders STYLED_CLASS buildArtifacts scoped by pseudo selectors and media queries", () => {
@@ -111,25 +100,10 @@ describe("HTMLBuildArtifactRender", () => {
         }
 
         expect(HTMLBuildArtifactRender(buildArtifact)).toEqual([
-            { fragment: ".fabc123:hover {", indentAction: "OPEN" },
-            { fragment: "color: blue;", indentAction: "NONE" },
-            { fragment: "}", indentAction: "CLOSE" },
-
-            { fragment: "@media (max-width: 600px) {", indentAction: "OPEN" },
-            { fragment: ".fabc123 {", indentAction: "OPEN" },
-            { fragment: "max-width: 500px;", indentAction: "NONE" },
-            { fragment: "}", indentAction: "CLOSE" },
-            { fragment: "}", indentAction: "CLOSE" },
-
-            { fragment: ".fabc123 {", indentAction: "OPEN" },
-            { fragment: "padding: 4px;", indentAction: "NONE" },
-            { fragment: "}", indentAction: "CLOSE" },
-
-            { fragment: "@media (max-width: 600px) {", indentAction: "OPEN" },
-            { fragment: ".fabc123:hover {", indentAction: "OPEN" },
-            { fragment: "font-weight: 700;", indentAction: "NONE" },
-            { fragment: "}", indentAction: "CLOSE" },
-            { fragment: "}", indentAction: "CLOSE" },
-        ])
+            ".fabc123:hover {color: blue;}",
+            "@media (max-width: 600px) {.fabc123 {max-width: 500px;}}",
+            ".fabc123 {padding: 4px;}",
+            "@media (max-width: 600px) {.fabc123:hover {font-weight: 700;}}"
+        ].join(""))
     })
 })
