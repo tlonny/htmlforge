@@ -80,7 +80,7 @@ export class HTML {
             fragments.push(HTMLBuildArtifactRender(buildArtifact))
         }
 
-        return fragments.join("\n")
+        return fragments.join("")
     }
 
 }
