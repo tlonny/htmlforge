@@ -12,7 +12,7 @@ export type {
     MediaQuery,
 } from "@src/type"
 
-export { HTML } from "@src/html"
+export { HTMLDocument } from "@src/html"
 export { NodeElement } from "@src/node/element"
 export { NodeFragment } from "@src/node/fragment"
 export { NodeRaw } from "@src/node/raw"

@@ -5,14 +5,12 @@ import type { BuildArtifact } from "@src/type"
 import { HTMLNodeDocType } from "@src/html/node/doctype"
 import { NodeFragment } from "@src/node/fragment"
 
-const DEFAULT_INDENT_COUNT = 4
 const DEFAULT_SIGNATURE_DISPLAY = true
 
-export class HTML {
+export class HTMLDocument {
 
     private readonly root : NodeFragment
     private readonly html : NodeElement
-    private readonly indent : string
 
     readonly head : NodeElement
     readonly body : NodeElement
@@ -21,7 +19,6 @@ export class HTML {
         indentCount?: number,
         signatureDisplay?: boolean
     }) {
-        this.indent = " ".repeat(Math.max(params?.indentCount ?? DEFAULT_INDENT_COUNT, 0))
         this.head = new NodeElement("head")
             .childAdd(new NodeElement("style"))
 
