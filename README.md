@@ -1,17 +1,17 @@
 # HTMLForge
 
-![ci](https://github.com/tlonny/htmlforge/actions/workflows/release.yml/badge.svg)
+![ci](https://github.com/tlonny/htmlforge/actions/workflows/check.yml/badge.svg)
 
 
 A minimal, zero-dependency library for building fully-styled HTML in TypeScript/JavaScript.
 
-# Features
+## Features
 
 - Zero dependencies.
 - Efficient and ergonomic inline styling (using de-duplicated dynamic classes).
 - Reusable "Component"-pattern for composing common UIs.
 
-# Quick Look
+## Quick Look
 
 ```typescript
 import { HTMLDocument, NodeElement, NodeText } from "htmlforge"
@@ -35,7 +35,7 @@ html.body.childAdd(
 const validHTML = html.toString()
 ```
 
-# Installation
+## Installation
 
 Install the package from npm:
 
@@ -43,9 +43,9 @@ Install the package from npm:
 npm install htmlforge
 ```
 
-# Usage
+## Usage
 
-## HTML structure
+### HTML structure
 
 An HTMLForge `HTMLDocument` instance is a tree of nodes. Nodes come in a few flavors:
 - `NodeElement`: represents tags (e.g., `<div>`, `<span>`), can hold attributes and inline styles, and can nest any other node as a child.
@@ -53,7 +53,7 @@ An HTMLForge `HTMLDocument` instance is a tree of nodes. Nodes come in a few fla
 - `NodeRaw`: holds raw HTML without escaping.
 - `NodeFragment`: groups a collection of child nodes without introducing a wrapping element.
 
-## Creating an HTML document
+### Creating an HTML document
 
 Create a new HTML document using `new HTMLDocument()`, set attributes on the root `<html>` element via `html.attributeAdd`, and work directly with `html.head` and `html.body` to populate content. The constructor accepts optional parameters:
 - `indentCount` (default `4`): number of spaces used for pretty-print indentation in `toString()`.
@@ -96,7 +96,7 @@ const card = new NodeElement("section")
     )
 ```
 
-## `NodeFragment` nodes
+### `NodeFragment` nodes
 
 `NodeFragment` groups child nodes without adding a wrapper element. It only supports `childAdd` (also chainable).
 
@@ -109,7 +109,7 @@ const listItems = new NodeFragment()
     .childAdd(new NodeElement("li").childAdd(new NodeText("Three")))
 ```
 
-## Text and Raw nodes
+### Text and Raw nodes
 
 - `NodeText` holds HTML-escaped text content (no additional methods).
 - `NodeRaw` injects raw HTML as-is (no additional methods).
@@ -121,7 +121,7 @@ const safeText = new NodeText("<em>Escaped</em> output")
 const rawHtml = new NodeRaw("<em>Unescaped</em> output")
 ```
 
-## Define your own nodes
+### Define your own nodes
 
 Implement the `INode` interface to build reusable components. Compose a private `NodeElement` (style/shape it however you like) and proxy its `build()` method. Anything that implements `INode` can be passed to `childAdd` on `NodeElement` or `NodeFragment`.
 
