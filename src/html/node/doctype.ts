@@ -1,14 +1,18 @@
+import { NodeRaw } from "@src/node/raw"
 import type { INode, BuildArtifact } from "@src/type"
 
-const DOCTYPE = "<!DOCTYPE html>"
+export const RAW = "<!DOCTYPE html>"
 
 export class HTMLNodeDocType implements INode {
 
-    *build() : Iterable<BuildArtifact> {
-        yield {
-            buildArtifactType: "RAW",
-            raw: DOCTYPE
-        }
+    private readonly raw : NodeRaw
+
+    constructor() {
+        this.raw = new NodeRaw(RAW)
+    }
+
+    build() : Iterable<BuildArtifact> {
+        return this.raw.build()
     }
 }
 
