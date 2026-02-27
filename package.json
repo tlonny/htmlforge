@@ -11,7 +11,7 @@
     "typedoc": "^0.28.15"
   },
   "repository": {
-    "url": "https://github.com/tlonny/htmlforge"
+    "url": "https://github.com/lonnycorp/htmlforge"
   },
   "peerDependencies": {
     "typescript": "^5"
