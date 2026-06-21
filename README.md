@@ -1,6 +1,7 @@
 # HTMLForge
 
-![ci](https://github.com/lonnycorp/htmlforge/actions/workflows/check.yml/badge.svg)
+![Check](https://github.com/tlonny/htmlforge/actions/workflows/check.yml/badge.svg)
+![Release](https://github.com/tlonny/htmlforge/actions/workflows/release.yml/badge.svg)
 
 
 A minimal, zero-dependency library for building fully-styled HTML in TypeScript/JavaScript.
