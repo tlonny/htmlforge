@@ -1,6 +1,6 @@
 {
   "name": "@lonnycorp/htmlforge",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "scripts": {
     "build": "bun build.ts",
@@ -19,7 +19,7 @@
     "typescript": "^5"
   },
   "repository": {
-    "url": "git+https://github.com/lonnycorp/htmlforge.git"
+    "url": "git+https://github.com/tlonny/htmlforge.git"
   },
   "publishConfig": {
     "access": "public"
