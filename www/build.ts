@@ -16,7 +16,7 @@ document.head
     .child(new node.Element("meta")
         .attribute("name", "description")
         .attribute("content", "A minimal, zero-dependency library for building fully-styled HTML in TypeScript/JavaScript."))
-    .child(new node.Element("title").child(new node.Text("HtmlForge")))
+    .child(new node.Element("title").child(new node.Text("HTMLForge")))
     .child(new Highlight())
 document.body
     .css(cls => css.css`
