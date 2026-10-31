@@ -1,4 +1,4 @@
-import { mkdirSync, rmSync, writeFileSync } from "node:fs"
+import { copyFileSync, mkdirSync, rmSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { css, Document, node } from "@src/index"
 import { Footer } from "@www/component/footer"
@@ -17,6 +17,10 @@ document.head
         .attribute("name", "description")
         .attribute("content", "A minimal, zero-dependency library for building fully-styled HTML in TypeScript/JavaScript."))
     .child(new node.Element("title").child(new node.Text("HTMLForge")))
+    .child(new node.Element("link")
+        .attribute("rel", "icon")
+        .attribute("href", "/favicon.png")
+        .attribute("type", "image/png"))
     .child(new Highlight())
 document.body
     .css(cls => css.css`
@@ -40,4 +44,5 @@ document.body
 const html = document.toString()
 rmSync(DIST_PATH, { recursive: true, force: true })
 mkdirSync(DIST_PATH, { recursive: true })
+copyFileSync(join(import.meta.dir, "favicon.png"), join(DIST_PATH, "favicon.png"))
 writeFileSync(join(DIST_PATH, "index.html"), html)
