@@ -1,3 +1,8 @@
+import { join } from "node:path"
+
+const ROOT_DIRECTORY = import.meta.dir
+const OUTPUT_DIRECTORY = join(ROOT_DIRECTORY, "dist", "htmlforge")
+
 const build = Bun.spawn({
     cmd: [
         "bun",
@@ -6,7 +11,7 @@ const build = Bun.spawn({
         "src/index.ts",
         "--no-config",
         "--out-dir",
-        "dist",
+        OUTPUT_DIRECTORY,
         "--format",
         "esm",
         "--dts",
@@ -16,6 +21,7 @@ const build = Bun.spawn({
         "--platform",
         "node",
     ],
+    cwd: ROOT_DIRECTORY,
     stderr: "inherit",
     stdout: "inherit",
 })

@@ -1,151 +1,107 @@
 import { describe, expect, test } from "bun:test"
 
-import type { Artifact } from "@src/artifact"
-import type { StyledClass } from "@src/artifact/styled-class"
-import type { TagOpen } from "@src/artifact/tag-open"
+import { PLACEHOLDER, css } from "@src/css"
 import { Element, Text } from "@src/node"
 
 describe("Element", () => {
-
-    test("renders div with attributes and CSS rules", () => {
+    test("chains CSS callbacks with attributes and children", () => {
+        const layout = css`.${PLACEHOLDER} { display: flex; }`
+        const hover = css`.${PLACEHOLDER}:hover { color: red; }`
         const node = new Element("div")
+            .css(cls => css`.${cls} { display: flex; }`)
+            .css(cls => css`.${cls}:hover { color: red; }`)
             .attribute("id", "demo")
-            .attribute("data-role", "content")
-            .style("display", "flex")
-            .style("justify-content", "center")
-            .style("color", "red", { pseudoSelector: ":hover" })
-            .style("background-color", "#fafafa", { pseudoSelector: ":focus" })
-            .style("font-size", "12px", { mediaQuery: "@media (max-width: 600px)" })
+            .child(new Text("content"))
 
-        const buildArtifacts = Array.from(node.build()) as Artifact[]
-
-        expect(buildArtifacts.map(a => a.buildArtifactType)).toEqual([
-            "STYLED_CLASS",
-            "TAG_OPEN",
-            "TAG_CLOSE"
+        expect(Array.from(node.build())).toEqual([
+            { buildArtifactType: "CSS_CHUNK", ...layout },
+            { buildArtifactType: "CSS_CHUNK", ...hover },
+            {
+                buildArtifactType: "TAG_OPEN",
+                tagName: "div",
+                isVoid: false,
+                attributes: [
+                    { name: "id", value: "demo" },
+                    { name: "class", value: layout.hash },
+                    { name: "class", value: hover.hash }
+                ]
+            },
+            { buildArtifactType: "TEXT", text: "content" },
+            { buildArtifactType: "TAG_CLOSE", tagName: "div" }
         ])
+    })
 
-        const styledClass = buildArtifacts[0] as StyledClass
-        expect(styledClass.styles).toEqual([
-            { name: "display", value: "flex", pseudoSelector: null, mediaQuery: null },
-            { name: "justify-content", value: "center", pseudoSelector: null, mediaQuery: null },
-            { name: "color", value: "red", pseudoSelector: ":hover", mediaQuery: null },
-            { name: "background-color", value: "#fafafa", pseudoSelector: ":focus", mediaQuery: null },
-            { name: "font-size", value: "12px", pseudoSelector: null, mediaQuery: "@media (max-width: 600px)" }
-        ])
-
-        const tagOpen = buildArtifacts[1] as TagOpen
-        expect(tagOpen.tagName).toBe("div")
-        expect(tagOpen.isVoid).toBe(false)
-        expect(tagOpen.attributes).toEqual([
-            { name: "id", value: "demo" },
-            { name: "data-role", value: "content" },
-            { name: "class", value: styledClass.className }
-        ])
-
-        const tagClose = buildArtifacts[2]
-        expect(tagClose).toEqual({
-            buildArtifactType: "TAG_CLOSE",
-            tagName: "div"
+    test("runs callbacks once when CSS is added and keeps repeated builds stable", () => {
+        let calls = 0
+        const node = new Element("div").css(cls => {
+            calls++
+            expect(cls).toBe(PLACEHOLDER)
+            return css`.${cls} { color: red; }`
         })
+
+        expect(calls).toBe(1)
+        const first = Array.from(node.build())
+        expect(Array.from(node.build())).toEqual(first)
+        expect(calls).toBe(1)
     })
 
-    test("renders nested div tree", () => {
-        const parent = new Element("div").attribute("id", "root")
-            .style("padding", "8px")
-            .style("margin", "4px", { pseudoSelector: ":first-child" })
-        const childOne = new Element("div").attribute("data-child", "one")
-            .style("color", "green")
-            .style("font-weight", "500", { pseudoSelector: ":hover" })
-        const childTwo = new Element("div").attribute("data-child", "two")
-            .style("background-color", "#eee")
-            .style("border-color", "#ccc", { pseudoSelector: ":focus" })
+    test("attaches duplicate chunks only once and preserves existing classes", () => {
+        const shared = css`.${PLACEHOLDER} { color: red; }`
+        const node = new Element("div")
+            .attribute("class", "existing")
+            .css(() => shared)
+            .css(() => shared)
 
-        childOne.child(new Text("child-one"))
-        childTwo
-            .child(new Text("child-two"))
-            .child(
-                new Element("div")
-                    .attribute("data-child", "nested")
-                    .style("font-weight", "bold")
-                    .child(new Text("nested-child"))
-            )
-
-        parent
-            .child(childOne)
-            .child(childTwo)
-
-        const buildArtifacts = Array.from(parent.build()) as Artifact[]
-
-        expect(buildArtifacts.map(a => a.buildArtifactType)).toEqual([
-            "STYLED_CLASS",
-            "TAG_OPEN",
-            "STYLED_CLASS",
-            "TAG_OPEN",
-            "TEXT",
-            "TAG_CLOSE",
-            "STYLED_CLASS",
-            "TAG_OPEN",
-            "TEXT",
-            "STYLED_CLASS",
-            "TAG_OPEN",
-            "TEXT",
-            "TAG_CLOSE",
-            "TAG_CLOSE",
-            "TAG_CLOSE"
+        expect(Array.from(node.build())).toEqual([
+            { buildArtifactType: "CSS_CHUNK", ...shared },
+            {
+                buildArtifactType: "TAG_OPEN",
+                tagName: "div",
+                isVoid: false,
+                attributes: [
+                    { name: "class", value: "existing" },
+                    { name: "class", value: shared.hash }
+                ]
+            },
+            { buildArtifactType: "TAG_CLOSE", tagName: "div" }
         ])
     })
 
-    test("does not emit a styled class artifact when no styles are provided", () => {
+    test("does not emit a chunk when no CSS is provided", () => {
         const node = new Element("section")
             .attribute("data-kind", "plain")
             .child(new Text("content"))
 
-        const buildArtifacts = Array.from(node.build()) as Artifact[]
-
-        expect(buildArtifacts).toEqual([
+        expect(Array.from(node.build())).toEqual([
             {
                 buildArtifactType: "TAG_OPEN",
                 tagName: "section",
                 isVoid: false,
-                attributes: [
-                    { name: "data-kind", value: "plain" }
-                ]
+                attributes: [{ name: "data-kind", value: "plain" }]
             },
-            {
-                buildArtifactType: "TEXT",
-                text: "content"
-            },
-            {
-                buildArtifactType: "TAG_CLOSE",
-                tagName: "section"
-            }
+            { buildArtifactType: "TEXT", text: "content" },
+            { buildArtifactType: "TAG_CLOSE", tagName: "section" }
         ])
     })
 
     test("renders void elements once and ignores children", () => {
+        const width = css`.${PLACEHOLDER} { width: 128px; }`
         const img = new Element("img")
             .attribute("src", "/logo.png")
-            .attribute("alt", "Logo")
-            .style("width", "128px")
+            .css(cls => css`.${cls} { width: 128px; }`)
             .child(new Text("should-not-render"))
 
-        const buildArtifacts = Array.from(img.build()) as Artifact[]
-
-        const styledClass = buildArtifacts[0] as StyledClass
-        expect(styledClass.styles).toEqual([
-            { name: "width", value: "128px", pseudoSelector: null, mediaQuery: null }
+        expect(Array.from(img.build())).toEqual([
+            { buildArtifactType: "CSS_CHUNK", ...width },
+            {
+                buildArtifactType: "TAG_OPEN",
+                tagName: "img",
+                isVoid: true,
+                attributes: [
+                    { name: "src", value: "/logo.png" },
+                    { name: "class", value: width.hash }
+                ]
+            }
         ])
-
-        expect(buildArtifacts[1]).toEqual({
-            buildArtifactType: "TAG_OPEN",
-            tagName: "img",
-            isVoid: true,
-            attributes: [
-                { name: "src", value: "/logo.png" },
-                { name: "alt", value: "Logo" },
-                { name: "class", value: styledClass.className }
-            ]
-        })
     })
 })
