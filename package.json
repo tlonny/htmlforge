@@ -1,9 +1,10 @@
 {
   "name": "@lonnycorp/htmlforge",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "MIT",
   "scripts": {
     "build": "bun build.ts",
+    "build:www": "bun www/build.ts",
     "check": "bun run typecheck && bun run lint && bun test",
     "lint": "eslint --max-warnings=0",
     "typecheck": "tsc --noEmit",
@@ -26,12 +27,12 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs"
+      "types": "./dist/htmlforge/index.d.mts",
+      "import": "./dist/htmlforge/index.mjs"
     }
   },
   "files": [
-    "dist"
+    "dist/htmlforge"
   ],
   "type": "module"
 }

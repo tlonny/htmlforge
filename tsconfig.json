@@ -8,7 +8,8 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "paths": {
-      "@src/*": ["./src/*"]
+      "@src/*": ["./src/*"],
+      "@www/*": ["./www/src/*"]
     },
 
     // Bundler mode

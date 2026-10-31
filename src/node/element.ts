@@ -1,6 +1,6 @@
-import { createHash } from "node:crypto"
 import type { Artifact } from "@src/artifact"
-import type { MediaQuery, PseudoSelector, Style } from "@src/style"
+import { PLACEHOLDER } from "@src/css"
+import type { Chunk } from "@src/css"
 import type { Buildable } from "./buildable"
 
 export type Attribute = {
@@ -17,27 +17,18 @@ export class Element implements Buildable {
 
     private readonly tagName : string
     private readonly attributes: Attribute[]
-    private readonly styles: Style[]
+    private readonly cssFragments: Chunk[]
     private readonly children: Buildable[]
 
     constructor(tagName: string) {
         this.tagName = tagName.toLowerCase()
         this.attributes = []
-        this.styles = []
+        this.cssFragments = []
         this.children = []
     }
 
-    style(
-        name: string,
-        value: string,
-        options?: {
-            mediaQuery?: MediaQuery,
-            pseudoSelector?: PseudoSelector,
-        }
-    ) {
-        const pseudoSelector = options?.pseudoSelector ?? null
-        const mediaQuery = options?.mediaQuery ?? null
-        this.styles.push({ name, value, pseudoSelector, mediaQuery })
+    css(build: (cls: typeof PLACEHOLDER) => Chunk) {
+        this.cssFragments.push(build(PLACEHOLDER))
         return this
     }
 
@@ -55,22 +46,16 @@ export class Element implements Buildable {
         const attributes = [...this.attributes]
         const isVoid = VOID_ELEMENTS.has(this.tagName)
 
-        if (this.styles.length > 0) {
-            const hash = createHash("sha256")
-            for (const style of this.styles) {
-                hash.update(JSON.stringify(style))
+        const seenHashes = new Set<string>()
+        for (const chunk of this.cssFragments) {
+            if (seenHashes.has(chunk.hash)) {
+                continue
             }
-            const digest = hash.digest()
-                .subarray(0, 8)
-                .toString("base64url")
-
-            const className = `f${digest}`
-            attributes.push({ name: "class", value: className })
-
+            seenHashes.add(chunk.hash)
+            attributes.push({ name: "class", value: chunk.hash })
             yield {
-                buildArtifactType: "STYLED_CLASS",
-                styles: [...this.styles],
-                className: className
+                buildArtifactType: "CSS_CHUNK",
+                ...chunk
             }
         }
 

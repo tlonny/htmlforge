@@ -16,7 +16,6 @@ export class Document {
         displaySignature?: boolean
     }) {
         this.head = new Element("head")
-            .child(new Element("style"))
 
         this.body = new Element("body")
 
@@ -41,19 +40,19 @@ export class Document {
 
     toString() {
         const artifactBuffer : Artifact[] = []
-        const styledClassArtifacts : Artifact[] = []
-        const seenStyledClasses = new Set<string>()
+        const chunkArtifacts : Artifact[] = []
+        const seenChunks = new Set<string>()
         const fragments : string[] = []
 
         let spliceIndex = -1
         for (const artifact of this.root.build()) {
-            if (artifact.buildArtifactType === "STYLED_CLASS") {
-                if (seenStyledClasses.has(artifact.className)) {
+            if (artifact.buildArtifactType === "CSS_CHUNK") {
+                if (seenChunks.has(artifact.hash)) {
                     continue
                 }
 
-                seenStyledClasses.add(artifact.className)
-                styledClassArtifacts.push(artifact)
+                seenChunks.add(artifact.hash)
+                chunkArtifacts.push(artifact)
             } else {
                 artifactBuffer.push(artifact)
             }
@@ -61,13 +60,13 @@ export class Document {
             if (
                 spliceIndex === -1 &&
                 artifact.buildArtifactType === "TAG_OPEN" &&
-                artifact.tagName === "style"
+                artifact.tagName === "head"
             ) {
                 spliceIndex = artifactBuffer.length
             }
         }
 
-        artifactBuffer.splice(spliceIndex, 0, ...styledClassArtifacts)
+        artifactBuffer.splice(spliceIndex, 0, ...chunkArtifacts)
 
         for (const artifact of artifactBuffer) {
             render(artifact, fragments)
