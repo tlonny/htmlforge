@@ -10,7 +10,7 @@ import { TextAndRaw } from "./text-and-raw"
 import { Usage } from "./usage"
 
 export class HomePage implements node.Buildable {
-    private readonly root = new Window("HtmlForge")
+    private readonly root = new Window("HTMLForge")
         .child(new Introduction())
         .child(new QuickLook())
         .child(new Installation())

@@ -1,4 +1,4 @@
-# HtmlForge
+# HTMLForge
 
 ![Check](https://github.com/tlonny/htmlforge/actions/workflows/check.yml/badge.svg)
 ![Release](https://github.com/tlonny/htmlforge/actions/workflows/release.yml/badge.svg)
@@ -10,4 +10,4 @@
 bun add @lonnycorp/htmlforge
 ```
 
-For more detailed documentation, see the [HtmlForge website](https://htmlforge.lonnycorp.com).
+For more detailed documentation, see the [HTMLForge website](https://htmlforge.lonnycorp.com).
