@@ -9,6 +9,7 @@
     "allowJs": true,
     "paths": {
       "@src/*": ["./src/*"],
+      "@www/content/*": ["./www/content/*"],
       "@www/*": ["./www/src/*"]
     },
 
