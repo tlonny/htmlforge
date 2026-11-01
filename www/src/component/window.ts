@@ -1,5 +1,5 @@
 import { css, node } from "@src/index"
-import { Heading } from "@www/component/heading"
+import { Heading } from "@www/component/markdown/heading"
 
 export class Window implements node.Buildable {
     private readonly content = new node.Element("article")
@@ -28,7 +28,7 @@ export class Window implements node.Buildable {
             }
         `)
 
-    constructor(title: string) {
+    constructor(title: string, navigation?: node.Buildable, description?: node.Buildable) {
         this.root
             .child(new node.Element("header")
                 .css(cls => css.css`
@@ -38,8 +38,10 @@ export class Window implements node.Buildable {
                         color: #ffffff;
                     }
                 `)
-                .child(new Heading(1, title)))
-            .child(this.content)
+                .child(new Heading(1).child(title)))
+        if (description) this.root.child(description)
+        if (navigation) this.root.child(navigation)
+        this.root.child(this.content)
     }
 
     child(child: node.Buildable) {

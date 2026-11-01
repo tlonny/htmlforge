@@ -1,9 +1,10 @@
+import type { Code as MdastCode } from "mdast"
 import { css, node } from "@src/index"
 
-export class CodeBlock implements node.Buildable {
+export class Code implements node.Buildable {
     private readonly root: node.Element
 
-    constructor(source: string, language = "typescript") {
+    constructor(code: MdastCode) {
         this.root = new node.Element("pre")
         this.root.css(cls => css.css`
             .${cls} {
@@ -35,8 +36,8 @@ export class CodeBlock implements node.Buildable {
                     overflow: visible;
                 }
             `)
-            .attribute("class", `language-${language}`)
-            .child(new node.Text(source)))
+            .attribute("class", `language-${code.lang ?? "text"}`)
+            .child(new node.Text(code.value)))
     }
 
     build() {
