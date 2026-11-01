@@ -24,6 +24,7 @@ document.head
     .child(new Highlight())
 document.body
     .css(cls => css.css`
+        html { background: #000000; }
         .${cls}, .${cls} * { box-sizing: border-box; }
         .${cls} {
             display: flex;
@@ -31,14 +32,22 @@ document.body
             min-height: 100vh;
             min-height: 100svh;
             margin: 0;
-            background: #008080;
+            background: #000000;
             color: #000000;
             font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
             font-size: 0.8rem;
             line-height: 1.6;
         }
     `)
-    .child(new HomePage())
+    .child(new node.Element("div")
+        .css(cls => css.css`
+            .${cls} {
+                display: flow-root;
+                flex: 1;
+                background: #008080;
+            }
+        `)
+        .child(new HomePage()))
     .child(new Footer())
 
 const html = document.toString()
